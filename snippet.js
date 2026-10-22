@@ -61,7 +61,7 @@
     for (var i = 0; i < 6; i++) {
       try {
         var fe = w.frameElement;
-        if (fe) { fe.style.cssText = "position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;border:none;margin:0;"; n++; }
+        if (fe) { fe.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;border:none;margin:0;"; n++; }
         var p = w.parent; if (!p || p === w) break; w = p;
       } catch (e) { break; }
     }
@@ -74,8 +74,7 @@
       if (A) {
         spoofChain();
         A.requestDisplayMode({ mode: "fullscreen" }).then(function (r) {
-          fsDone = true; log("requestDisplayMode RESOLVED: " + JSON.stringify(r));
-          tryExpand();
+          fsDone = true; log("requestDisplayMode RESOLVED: " + JSON.stringify(r) + " (true fullscreen - no expansion needed)");
         }, function (e) {
           fsDone = true; log("requestDisplayMode REJECTED: " + (e && e.message || e));
           tryExpand();
