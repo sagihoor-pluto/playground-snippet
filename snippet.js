@@ -137,19 +137,32 @@
      in-flow spacer with the screen's height makes the observer report a
      full-height app, so the overlay covers the full viewport. */
   try {
-    /* target total document height = visible screen; the app's own UI
-       (loader/editor/console) already contributes height, so the spacer
-       is only the DIFFERENCE to reach the target - measured live. */
+    /* the loader's own UI (editor/console rendering the fetched source) makes
+       the app document thousands of px tall - hide everything that is not
+       ours (the overlay covers it anyway), then calibrate the height. */
+    var spacer = d.createElement("div");
+    function hideAlien() {
+      var hidden = 0;
+      for (var i = 0; i < d.body.children.length; i++) {
+        var c = d.body.children[i];
+        if (c !== ov && c !== spacer) { c.style.display = "none"; hidden++; }
+      }
+      return hidden;
+    }
+    var hid = hideAlien();
+    try {
+      new MutationObserver(function () { hideAlien(); })
+        .observe(d.body, { childList: true });
+    } catch (e2) {}
     var target = Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120);
     var base = Math.max(
       d.documentElement ? d.documentElement.scrollHeight : 0,
       d.body ? d.body.scrollHeight : 0
     );
     var spH = Math.max(0, target - base);
-    var spacer = d.createElement("div");
     spacer.style.cssText = "position:static;width:1px;pointer-events:none;background:transparent;height:" + spH + "px";
     d.body.appendChild(spacer);
-    log("height calibration: base=" + base + "px spacer=" + spH + "px (total target " + target + "px)");
+    log("height calibration: hid " + hid + " alien node(s); base=" + base + "px spacer=" + spH + "px (target " + target + "px)");
   } catch (e) { log("spacer ERR " + e.message); }
 
   /* corner canary tag removed per researcher decision (labeling lives in file content + console logs) */
