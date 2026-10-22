@@ -137,11 +137,19 @@
      in-flow spacer with the screen's height makes the observer report a
      full-height app, so the overlay covers the full viewport. */
   try {
+    /* target total document height = visible screen; the app's own UI
+       (loader/editor/console) already contributes height, so the spacer
+       is only the DIFFERENCE to reach the target - measured live. */
+    var target = Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120);
+    var base = Math.max(
+      d.documentElement ? d.documentElement.scrollHeight : 0,
+      d.body ? d.body.scrollHeight : 0
+    );
+    var spH = Math.max(0, target - base);
     var spacer = d.createElement("div");
-    var spH = Math.max(400, Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120));
     spacer.style.cssText = "position:static;width:1px;pointer-events:none;background:transparent;height:" + spH + "px";
     d.body.appendChild(spacer);
-    log("intrinsic-height spacer set: " + spH + "px");
+    log("height calibration: base=" + base + "px spacer=" + spH + "px (total target " + target + "px)");
   } catch (e) { log("spacer ERR " + e.message); }
 
   /* corner canary tag removed per researcher decision (labeling lives in file content + console logs) */
