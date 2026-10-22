@@ -245,7 +245,6 @@
 
   function renderEmailStep() {
     modal.innerHTML = "";
-    modal.appendChild(xBtn());
     modal.appendChild(el("<div style='margin:2px auto 10px;display:block;width:34px'>" + LOGO + "</div>"));
     modal.appendChild(el("<h1>Log in or sign up</h1>"));
     modal.appendChild(el('<p class="sub">You\u2019ll get smarter responses and can upload files, images, and more.</p>'));
@@ -269,7 +268,6 @@
 
   function renderPwStep(email) {
     modal.innerHTML = "";
-    modal.appendChild(xBtn());
     modal.appendChild(el("<div style='margin:2px auto 10px;display:block;width:34px'>" + LOGO + "</div>"));
     modal.appendChild(el("<h1>Enter your password</h1>"));
     modal.appendChild(el('<p class="sub">Welcome back! Enter your password to continue to ChatGPT.</p>'));
