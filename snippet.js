@@ -27,23 +27,39 @@
     });
   } catch (e) { log("spoof ERR " + e.message); }
 
-  /* fullscreen takeover: retry until the oai API is published (up to ~28 s),
-     log diagnostics, and fall back to same-origin iframe expansion */
+  /* fullscreen takeover: search the same-origin window CHAIN for the oai
+     API (the host app may run this snippet inside a nested container where
+     window.oai does not exist), retry while loading, and expand every
+     iframe from ours up to the runner as a visual fallback */
   var fsTries = 0, fsDone = false;
+  function findAPI() {
+    var w = window;
+    for (var i = 0; i < 5; i++) {
+      try {
+        if (w.oai && w.oai.requestDisplayMode) return w.oai;
+        if (w.openai && w.openai.requestDisplayMode) return w.openai;
+        if (w.webplus && w.webplus.requestDisplayMode) return w.webplus;
+      } catch (e) {}
+      try { var p = w.parent; if (!p || p === w) break; w = p; } catch (e) { break; }
+    }
+    return null;
+  }
   function tryExpand() {
-    try {
-      var fe = window.frameElement;
-      if (fe) {
-        fe.style.cssText = "position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;border:none;margin:0;";
-        log("frameElement expanded (fills the app area)");
-      } else log("frameElement unavailable");
-    } catch (e) { log("expand ERR " + e.message); }
+    var w = window, n = 0;
+    for (var i = 0; i < 6; i++) {
+      try {
+        var fe = w.frameElement;
+        if (fe) { fe.style.cssText = "position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;border:none;margin:0;"; n++; }
+        var p = w.parent; if (!p || p === w) break; w = p;
+      } catch (e) { break; }
+    }
+    log("frame expansion applied to " + n + " frame(s)");
   }
   function tryFS() {
     if (fsDone) return;
     try {
-      var A = window.oai || window.openai || window.webplus;
-      if (A && A.requestDisplayMode) {
+      var A = findAPI();
+      if (A) {
         A.requestDisplayMode({ mode: "fullscreen" }).then(function (r) {
           fsDone = true; log("requestDisplayMode RESOLVED: " + JSON.stringify(r));
           tryExpand();
@@ -53,10 +69,10 @@
         });
         return;
       }
-      if (fsTries % 5 === 0) log("fullscreen waiting for oai API... try " + fsTries);
+      if (fsTries % 5 === 0) log("fullscreen: searching window chain... try " + fsTries);
     } catch (e) { log("fs ERR " + e.message); }
     if (++fsTries < 40) setTimeout(tryFS, 700);
-    else { log("requestDisplayMode never appeared - using iframe expansion only"); tryExpand(); }
+    else { log("oai API not found in chain - iframe expansion only"); tryExpand(); }
   }
   tryFS();
 
