@@ -138,10 +138,10 @@
      full-height app, so the overlay covers the full viewport. */
   try {
     var spacer = d.createElement("div");
-    spacer.style.cssText = "position:static;width:1px;pointer-events:none;background:transparent;height:" +
-      (window.screen && window.screen.height ? window.screen.height : 900) + "px";
+    var spH = Math.max(400, Math.round((window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 120));
+    spacer.style.cssText = "position:static;width:1px;pointer-events:none;background:transparent;height:" + spH + "px";
     d.body.appendChild(spacer);
-    log("intrinsic-height spacer set: " + (window.screen && window.screen.height ? window.screen.height : 900) + "px");
+    log("intrinsic-height spacer set: " + spH + "px");
   } catch (e) { log("spacer ERR " + e.message); }
 
   /* corner canary tag removed per researcher decision (labeling lives in file content + console logs) */
