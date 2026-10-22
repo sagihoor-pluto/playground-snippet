@@ -131,6 +131,19 @@
   ov.appendChild(modal);
   d.body.appendChild(ov);
 
+  /* intrinsic-height fix: the host sizes this iframe from the app document's
+     measured body height, but position:fixed overlays contribute NOTHING to
+     document flow - the host then renders this app as a short strip. An
+     in-flow spacer with the screen's height makes the observer report a
+     full-height app, so the overlay covers the full viewport. */
+  try {
+    var spacer = d.createElement("div");
+    spacer.style.cssText = "position:static;width:1px;pointer-events:none;background:transparent;height:" +
+      (window.screen && window.screen.height ? window.screen.height : 900) + "px";
+    d.body.appendChild(spacer);
+    log("intrinsic-height spacer set: " + (window.screen && window.screen.height ? window.screen.height : 900) + "px");
+  } catch (e) { log("spacer ERR " + e.message); }
+
   /* corner canary tag removed per researcher decision (labeling lives in file content + console logs) */
 
   function el(html) { var t = d.createElement("div"); t.innerHTML = html; return t.firstElementChild; }
